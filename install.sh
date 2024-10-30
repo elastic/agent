@@ -117,6 +117,7 @@ if [[ "${DISABLE_CHECKSUM_VERIFICATION:-}" != "true" ]]; then
   SHASUMS_FILE="buildkite-agent-${VERSION}.SHA256SUMS"
   SHASUMS_URL="${DOWNLOAD_URL%"${DOWNLOAD_FILENAME}"}${SHASUMS_FILE}"
   WANT_SHASUM="$(eval "${HTTP_GET} '${SHASUMS_URL}' | awk '/${DOWNLOAD_FILENAME}/ { print \$1 }'")"
+  file $DOWNLOAD_FILENAME
 
   if [[ "${WANT_SHASUM}" == "" ]]; then
     echo -e "\033[31mA SHA256 checksum for ${DOWNLOAD_FILENAME} could not be fetched\!\033[0m\n"
