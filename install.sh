@@ -4,7 +4,7 @@
 #
 # For more information, see: https://github.com/buildkite/agent
 
-set -eu
+set -eux
 
 COMMAND="bash -c \"\`curl -sL https://raw.githubusercontent.com/buildkite/agent/main/install.sh\`\""
 
@@ -188,6 +188,9 @@ fi
 if [[ "${DISABLE_CHECKSUM_VERIFICATION:-}" != "true" ]]; then
   if ! eval "${SHA256SUM} ${INSTALL_TMP}/${DOWNLOAD_FILENAME} | grep -q '${WANT_SHASUM}'" ; then
     echo -e "\033[31m${DOWNLOAD_FILENAME} downloaded, but was corrupted (has the wrong checksum)\033[0m\n"
+    echo -e "Expected ${WANT_SHASUM}"
+    GOT=`${SHA256SUM} ${INSTALL_TMP}/${DOWNLOAD_FILENAME}`
+    echo -e "Got $GOT"
     echo -e "\033[31mYou might be able to resolve this by retrying.\033[0m\n"
     echo -e "\033[31mTo skip checksum verification, set DISABLE_CHECKSUM_VERIFICATION=true when re-running.\033[0m\n"
     exit 1
