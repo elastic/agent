@@ -117,7 +117,6 @@ if [[ "${DISABLE_CHECKSUM_VERIFICATION:-}" != "true" ]]; then
   SHASUMS_FILE="buildkite-agent-${VERSION}.SHA256SUMS"
   SHASUMS_URL="${DOWNLOAD_URL%"${DOWNLOAD_FILENAME}"}${SHASUMS_FILE}"
   WANT_SHASUM="$(eval "${HTTP_GET} '${SHASUMS_URL}' | awk '/${DOWNLOAD_FILENAME}/ { print \$1 }'")"
-  file $DOWNLOAD_FILENAME
 
   if [[ "${WANT_SHASUM}" == "" ]]; then
     echo -e "\033[31mA SHA256 checksum for ${DOWNLOAD_FILENAME} could not be fetched\!\033[0m\n"
@@ -192,6 +191,8 @@ if [[ "${DISABLE_CHECKSUM_VERIFICATION:-}" != "true" ]]; then
   if ! eval "${SHA256SUM} ${INSTALL_TMP}/${DOWNLOAD_FILENAME} | grep -q '${WANT_SHASUM}'" ; then
     echo -e "\033[31m${DOWNLOAD_FILENAME} downloaded, but was corrupted (has the wrong checksum)\033[0m\n"
     echo -e "Expected ${WANT_SHASUM}"
+    file ${INSTALL_TMP}/$DOWNLOAD_FILENAME
+    sha256sum ${INSTALL_TMP}/$DOWNLOAD_FILENAME
     GOT=`${SHA256SUM} ${INSTALL_TMP}/${DOWNLOAD_FILENAME}`
     echo -e "Got $GOT"
     echo -e "\033[31mYou might be able to resolve this by retrying.\033[0m\n"
