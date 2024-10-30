@@ -18,8 +18,6 @@ echo -e "\033[33m
                                                 __/ |
                                                |___/\033[0m"
 
-echo -e "Finding latest release..."
-
 SYSTEM="$(uname -s | awk '{print tolower($0)}')"
 MACHINE="$(uname -m | awk '{print tolower($0)}')"
 
@@ -84,6 +82,8 @@ else
 fi
 
 if [[ "${BUILDKITE_AGENT_VERSION:-"latest"}" == "latest" ]]; then
+    echo -e "Finding latest release..."
+
     RELEASE_INFO_URL="https://buildkite.com/agent/releases/latest?platform=${PLATFORM}&arch=${ARCH}&system=${SYSTEM}&machine=${MACHINE}"
     if [[ "${BETA:-}" == "true" ]]; then
       RELEASE_INFO_URL="${RELEASE_INFO_URL}&prerelease=true"
